@@ -4,7 +4,7 @@ from django.core.validators import validate_email
 from django.utils.translation import gettext_lazy as _
 
 class CustomUserManager(BaseUserManager):
-    def email_is_valid(self, email):
+    def email_validator(self, email):
         try:
             validate_email(email)
         except ValidationError:
@@ -20,7 +20,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_("Users must submit a last name."))
         if email:
             email = self.normalize_email(email)
-            self.email_is_valid(email)
+            self.email_validator(email)
         else:
             raise ValueError(_("Base User Account: An email address is required."))
         user = self.model(
@@ -32,7 +32,7 @@ class CustomUserManager(BaseUserManager):
         )
 
         user.set_password(password)
-        extra_fields.setdefault('is_staff, False')
+        extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
         user.save(using=self._db)
         return user
