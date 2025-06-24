@@ -29,13 +29,13 @@ class PropertySerializer(serializers.ModelSerializer):
             "total_floors",
             "bedrooms",
             "bathrooms",
-            "adver_type",
+            "advert_type",
             "property_type",
             "cover_photo",
-            "photo_1",
-            "photo_2",
-            "photo_3",
-            "photo_4",
+            "photo1",
+            "photo2",
+            "photo3",
+            "photo4",
             "published_status",
             "views",
         ]
@@ -43,7 +43,7 @@ class PropertySerializer(serializers.ModelSerializer):
     def get_user(self, obj):
         return obj.user.username
     
-class PropertCreateSerializer(serializers.ModelSerializer):
+class PropertyCreateSerializer(serializers.ModelSerializer):
     country = CountryField(name_only=True)
 
     class Meta:
