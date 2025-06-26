@@ -39,6 +39,7 @@ SITE_ID = 1
 
 THIRD_PARTY_APPS=[
     "rest_framework",
+    "drf_spectacular",
     "django_filters",
     "django_countries",
     "phonenumber_field",
@@ -148,7 +149,8 @@ AUTH_USER_MODEL = "users.User"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     
 }
 
