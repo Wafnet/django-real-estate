@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from real_estate.settings.base import AUTH_USER_MODEL
+
 from apps.common.models import TimeStampedUUIDModel
 from apps.profiles.models import Profile
+from real_estate.settings.base import AUTH_USER_MODEL
+
 
 class Rating(TimeStampedUUIDModel):
 
@@ -14,15 +16,17 @@ class Rating(TimeStampedUUIDModel):
         RATING_5 = 5, _("Excellent")
 
     rater = models.ForeignKey(
-        AUTH_USER_MODEL, verbose_name=_("User poviding the rating"),
+        AUTH_USER_MODEL,
+        verbose_name=_("User poviding the rating"),
         on_delete=models.SET_NULL,
-        null=True
+        null=True,
     )
     agent = models.ForeignKey(
-        Profile, verbose_name=_("Agent being rated"),
+        Profile,
+        verbose_name=_("Agent being rated"),
         related_name="agent_review",
         on_delete=models.SET_NULL,
-        null=True
+        null=True,
     )
     rating = models.IntegerField(
         verbose_name=_("Rating"),

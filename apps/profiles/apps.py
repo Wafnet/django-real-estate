@@ -7,4 +7,5 @@ class ProfilesConfig(AppConfig):
 
     def ready(self):
         from apps.profiles import signals
+
         # Ensure signals are imported when the app is ready

@@ -7,13 +7,16 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
+
 from apps.common.models import TimeStampedUUIDModel
 
 User = get_user_model()
 
+
 class PropertyPublishedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(published_status=True)
+
 
 class Property(TimeStampedUUIDModel):
     class AdverType(models.TextChoices):
@@ -37,12 +40,28 @@ class Property(TimeStampedUUIDModel):
     )
     title = models.CharField(verbose_name=_("Property Title"), max_length=250)
     slug = AutoSlugField(populate_from="title", unique=True, always_update=True)
-    ref_code = models.CharField(verbose_name=_("Property Reference Code"), max_length=255, unique=True, blank=True)
-    description = models.TextField(verbose_name=_("Description"), default="Default description...update me please...")
-    country = CountryField(verbose_name=_("Country"), default="KE", blank_label="(Select a country)",)
+    ref_code = models.CharField(
+        verbose_name=_("Property Reference Code"),
+        max_length=255,
+        unique=True,
+        blank=True,
+    )
+    description = models.TextField(
+        verbose_name=_("Description"),
+        default="Default description...update me please...",
+    )
+    country = CountryField(
+        verbose_name=_("Country"),
+        default="KE",
+        blank_label="(Select a country)",
+    )
     city = models.CharField(verbose_name=_("City"), max_length=180, default="Nairobi")
-    postal_code = models.CharField(verbose_name=_("Postal Code"), max_length=100, default="00100")
-    street_address = models.CharField(verbose_name=_("Street Address"), max_length=150, default="Moi Avenue")
+    postal_code = models.CharField(
+        verbose_name=_("Postal Code"), max_length=100, default="00100"
+    )
+    street_address = models.CharField(
+        verbose_name=_("Street Address"), max_length=150, default="Moi Avenue"
+    )
     property_number = models.IntegerField(
         verbose_name=_("Property Number"),
         validators=[MinValueValidator(1)],
@@ -67,10 +86,7 @@ class Property(TimeStampedUUIDModel):
         decimal_places=2,
         default=0.0,
     )
-    total_floors = models.IntegerField(
-        verbose_name=_("Number Floors"),
-        default=0
-    )
+    total_floors = models.IntegerField(verbose_name=_("Number Floors"), default=0)
     bedrooms = models.IntegerField(
         verbose_name=_("Bedrooms"),
         default=1,
@@ -95,19 +111,29 @@ class Property(TimeStampedUUIDModel):
     )
     cover_photo = models.ImageField(
         verbose_name=_("Main Photo"),
-        default="/house_sample.jpg", null=True, blank=True,
+        default="/house_sample.jpg",
+        null=True,
+        blank=True,
     )
     photo1 = models.ImageField(
-        default="/interior_sample.jpg", null=True, blank=True,
+        default="/interior_sample.jpg",
+        null=True,
+        blank=True,
     )
     photo2 = models.ImageField(
-        default="/interior_sample.jpg", null=True, blank=True,
+        default="/interior_sample.jpg",
+        null=True,
+        blank=True,
     )
     photo3 = models.ImageField(
-        default="/interior_sample.jpg", null=True, blank=True,
+        default="/interior_sample.jpg",
+        null=True,
+        blank=True,
     )
     photo4 = models.ImageField(
-        default="/interior_sample.jpg", null=True, blank=True,
+        default="/interior_sample.jpg",
+        null=True,
+        blank=True,
     )
     published_status = models.BooleanField(
         verbose_name=_("Published Status"),
@@ -122,7 +148,7 @@ class Property(TimeStampedUUIDModel):
 
     def __str__(self):
         return self.title
-    
+
     class Meta:
         verbose_name = "Property"
         verbose_name_plural = "Properties"
@@ -130,7 +156,9 @@ class Property(TimeStampedUUIDModel):
     def save(self, *args, **kwargs):
         self.title = str.title(self.title)
         self.description = str.capitalize(self.description)
-        self.ref_code = "".join(random.choices(string.ascii_uppercase + string.digits, k=10))
+        self.ref_code = "".join(
+            random.choices(string.ascii_uppercase + string.digits, k=10)
+        )
         super(Property, self).save(*args, **kwargs)
 
     @property
@@ -140,17 +168,19 @@ class Property(TimeStampedUUIDModel):
         tax_amount = round(property_price * tax_percentage, 2)
         price_after_tax = float(round(property_price + tax_amount, 2))
         return price_after_tax
-    
+
+
 class PropertyViews(TimeStampedUUIDModel):
-        ip = models.CharField(verbose_name=_("IP Address"), max_length=250)
-        property = models.ForeignKey(
-            Property, related_name="property_views", on_delete=models.CASCADE
+    ip = models.CharField(verbose_name=_("IP Address"), max_length=250)
+    property = models.ForeignKey(
+        Property, related_name="property_views", on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return (
+            f"Total views on - {self.property.title} is {self.property.views} view(s)"
         )
 
-        def __str__(self):
-            return (
-                f"Total views on - {self.property.title} is {self.property.views} view(s)"
-            )
-        class Meta:
-            verbose_name = "Total Views on Property"
-            verbose_name_plural = "Total Property Views"
+    class Meta:
+        verbose_name = "Total Views on Property"
+        verbose_name_plural = "Total Property Views"
