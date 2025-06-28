@@ -17,3 +17,7 @@ djangorestframework-simplejwt==5.3.1
 PyJWT==2.1.0
 drf-spectacular==0.27.2
 setuptools>=70.0.0
+pytest-django==4.8.0
+pytest-factoryboy==2.1.0
+faker==8.9.1
+pytest-cov==2.12.1
